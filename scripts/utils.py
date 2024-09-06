@@ -8,6 +8,13 @@ from IPython.display import Image
 from plotly.subplots import make_subplots
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn import preprocessing
+import plotly.express as px
+import plotly.io as pio
+from IPython.display import Image
+from sklearn.cluster import KMeans
+from scipy.spatial.distance import cdist
+from sklearn.preprocessing import StandardScaler, normalize
 
 def load_df(filepath):
     return pd.read_csv(filepath)
@@ -206,3 +213,32 @@ def mult_hist(sr, rows, cols, title_text, subplot_titles, interactive=False):
     else:
         return Image(pio.to_image(fig, format='png', width=1200))
 
+
+def plot_top_applications():
+    # Define data
+    applications = ['Gaming', 'Youtube', 'Netflix', 'Google', 'Email', 'Social Media', 'Other']
+    data_values = [63910124731666, 3362537620065, 3360563670772, 1159544186717, 335503000148, 271478798103, 63770726326023]
+    top_applications, top_values = zip(*sorted(zip(applications, data_values), key=lambda x: x[1], reverse=True)[:3])
+    plt.figure(figsize=(8, 6))
+    plt.bar(top_applications, top_values, color=['blue', 'green', 'orange'])
+    plt.title('Top 3 Most Used Applications')
+    plt.xlabel('Applications')
+    plt.ylabel('Total Data (in bytes)')
+    for i, value in enumerate(top_values):
+        plt.text(i, value + 0.002 * max(top_values), f'{value:,}', ha='center')
+    plt.show()
+
+
+
+
+def choose_kmeans(df: pd.DataFrame, num: int):
+  distortions = []
+  inertias = []
+  K = range(1, num)
+  for k in K:
+    kmeans = KMeans(n_clusters=k, random_state=0).fit(df)
+    distortions.append(sum(
+        np.min(cdist(df, kmeans.cluster_centers_, 'euclidean'), axis=1)) / df.shape[0])
+    inertias.append(kmeans.inertia_)
+
+  return (distortions, inertias)
