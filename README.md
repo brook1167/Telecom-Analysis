@@ -1,4 +1,4 @@
-# Telecom-Analysis
+# Telecom Analysis
 
 ## Project Overview
 
