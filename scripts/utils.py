@@ -59,6 +59,34 @@ def fill_missing_values(df):
             # Fill missing values with the mode for categorical columns, in place
             df[column].fillna(df[column].mode()[0], inplace=True)
 
+def fill_missing_values_t3(df):
+    # Define columns to fill with their respective methods
+    columns_to_fill = {
+        'MSISDN/Number':'mean',
+        'Avg RTT DL (ms)': 'mean',
+        'Avg RTT UL (ms)': 'mean',
+        'Avg Bearer TP DL (kbps)': 'mean',
+        'Avg Bearer TP UL (kbps)': 'mean',
+        'TCP DL Retrans. Vol (Bytes)': 'mean',
+        'TCP UL Retrans. Vol (Bytes)': 'mean',
+        'Total_Avg_RTT': 'mean'
+    }
+    
+    # Handle numeric columns
+    for col, method in columns_to_fill.items():
+        if col in df.columns:
+            if method == 'mean':
+                mean_value = df[col].mean()
+                df[col] = df[col].fillna(value=mean_value)
+            # Add more methods if needed
+    
+    # Handle categorical columns separately
+    categorical_columns = ['Handset Type']
+    
+    for col in categorical_columns:
+        if col in df.columns:
+            mode_value = df[col].mode()[0]  # Get the most frequent value
+            df[col] = df[col].fillna(value=mode_value)
 
 
 def calculate_total_data_volumes(df):
