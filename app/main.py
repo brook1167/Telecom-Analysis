@@ -195,20 +195,20 @@ elif selected_analysis == "User Overview Analysis":
     with col2:
         st.write(top_huawei)
 
-    st.write("Histogram of 'Total UL (Bytes)'")
+    st.write("Histogram of Total UL (Bytes)")
 
 
     # Histogram of 'Total UL (Bytes)' using Plotly
     fig_ul_bytes = px.histogram(df, x='Total UL (Bytes)', nbins=30, title="Distribution of Total UL (Bytes)")
     st.plotly_chart(fig_ul_bytes)
 
-    st.write("Histogram of 'Total DL (Bytes)'")
+    st.write("Histogram of Total DL (Bytes)")
     
     # Histogram of 'Total DL (Bytes)' using Plotly
     fig_dl_bytes = px.histogram(df, x='Total DL (Bytes)', nbins=30, title="Distribution of Total DL (Bytes)")
     st.plotly_chart(fig_dl_bytes)
 
-    st.write("Histogram of 'Social_Media_Total_Data'")
+    st.write("Histogram of Social_Media_Total_Data")
 
     df["Social_Media_Total_Data"] = df["Social Media DL (Bytes)"] + df["Social Media UL (Bytes)"]
 
@@ -217,13 +217,56 @@ elif selected_analysis == "User Overview Analysis":
     st.plotly_chart(fig_social_media)
 
     
-    st.write("Histogram of 'Google_Total_Data'")
+    st.write("Histogram of Google_Total_Data")
 
     df["Google_Total_Data"] = df["Google DL (Bytes)"] + df["Google UL (Bytes)"]
     
     # Histogram of 'Google_Total_Data' using Plotly
     fig_google_data = px.histogram(df, x='Google_Total_Data', nbins=30, title="Distribution of Google Total Data")
     st.plotly_chart(fig_google_data)
+
+    
+    st.write("Histogram of Email_Total_Data")
+
+    df["Email_Total_Data"] = df["Email DL (Bytes)"] + df["Email UL (Bytes)"]
+    
+    # Histogram of 'Email_Total_Data' using Plotly
+    fig_email_data = px.histogram(df, x='Email_Total_Data', nbins=30, title="Distribution of Email Total Data")
+    st.plotly_chart(fig_email_data)
+
+    st.write("Histogram of Youtube_Total_Data")
+
+    df["Youtube_Total_Data"] = df["Youtube DL (Bytes)"] + df["Youtube UL (Bytes)"]
+    
+    # Histogram of 'Email_Total_Data' using Plotly
+    fig_youtube_data = px.histogram(df, x='Youtube_Total_Data', nbins=30, title="Distribution of Youtube Total Data")
+    st.plotly_chart(fig_youtube_data)
+
+
+
+    st.write("Histogram of Total Netflix Data")
+
+    df["Netflix_Total_Data"] = df["Netflix DL (Bytes)"] + df["Netflix UL (Bytes)"]
+    
+    # Histogram of 'Netflix_Total_Data' using Plotly
+    fig_netflix_data = px.histogram(df, x='Netflix_Total_Data', nbins=30, title="Distribution of Netflix Total Data")
+    st.plotly_chart(fig_netflix_data)
+
+    st.write("Histogram of Total Gaming Data")
+
+    df["Gaming_Total_Data"] = df["Gaming DL (Bytes)"] + df["Gaming UL (Bytes)"]
+    
+    # Histogram of 'Gaming_Total_Data' using Plotly
+    fig_gaming_data = px.histogram(df, x='Gaming_Total_Data', nbins=30, title="Distribution of Gaming Total Data")
+    st.plotly_chart(fig_gaming_data)
+
+    st.write("Histogram of Other Data")
+
+    df["Other_Total_Data"] = df["Other DL (Bytes)"] + df["Other UL (Bytes)"]
+    
+    # Histogram of 'Other_Total_Data' using Plotly
+    fig_other_data = px.histogram(df, x='Other_Total_Data', nbins=30, title="Distribution of Other Total Data")
+    st.plotly_chart(fig_other_data)
 
 
 # Placeholder for content based on selected analysis
