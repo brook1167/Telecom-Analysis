@@ -268,6 +268,53 @@ elif selected_analysis == "User Overview Analysis":
     fig_other_data = px.histogram(df, x='Other_Total_Data', nbins=30, title="Distribution of Other Total Data")
     st.plotly_chart(fig_other_data)
 
+    st.write("Scatter Plot of Total UL (Bytes) vs. Gaming_Total_Data")
+
+    df["Total_UL_and_DL"] = df["Total UL (Bytes)"] + df["Total DL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Gaming_Total_Data', title="Total UL (Bytes) vs. Gaming_Total_Data",)
+    st.plotly_chart(fig_scatter)
+
+    st.write("Scatter Plot of Total UL (Bytes) vs. Youtube Data")
+
+    df["Youtube_Total_Data"] = df["Youtube DL (Bytes)"] + df["Youtube UL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Youtube_Total_Data', title="Total UL (Bytes) vs. Youtube_Total_Data",)
+    st.plotly_chart(fig_scatter)
+
+    st.write("Scatter Plot of Total Data vs. Email Total Data")
+
+    df["Email_Total_Data"] = df["Email DL (Bytes)"] + df["Email UL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Email_Total_Data', title="Total Data vs. Email_Total_Data",)
+    st.plotly_chart(fig_scatter)
+
+    st.write("Scatter Plot of Total Data vs. Social Media Total Data")
+
+    df["Social_Media_Total_Data"] = df["Social Media DL (Bytes)"] + df["Social Media UL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Social_Media_Total_Data', title="Total Data vs. Social_Media_Total_Data",)
+    st.plotly_chart(fig_scatter)
+
+    st.write("Scatter Plot of Total Data Vs. Netflix_Total_Data (MegaBytes)")
+
+    df["Netflix_Total_Data"] = df["Netflix DL (Bytes)"] + df["Netflix UL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Netflix_Total_Data', title="Total Data Vs. Netflix_Total_Data (MegaBytes)",)
+    st.plotly_chart(fig_scatter)
+
+    st.write("Scatter Plot of Total Data Vs. Other_Total_Data")
+
+    df["Other_Total_Data"] = df["Other DL (Bytes)"] + df["Other UL (Bytes)"]
+
+    # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
+    fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Other_Total_Data', title="Total Data Vs. Other_Total_Data",)
+    st.plotly_chart(fig_scatter)
 
 # Placeholder for content based on selected analysis
 elif selected_analysis == "User Engagement Analysis":
