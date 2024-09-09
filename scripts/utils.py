@@ -270,3 +270,76 @@ def choose_kmeans(df: pd.DataFrame, num: int):
     inertias.append(kmeans.inertia_)
 
   return (distortions, inertias)
+
+
+def aggregate_customer_data(df):
+    # Calculate average TCP retransmission
+    df['Avg TCP Retrans (Bytes)'] = (df['TCP DL Retrans. Vol (Bytes)'] + df['TCP UL Retrans. Vol (Bytes)']) / 2
+
+    # Calculate average RTT
+    df['Avg RTT (ms)'] = (df['Avg RTT DL (ms)'] + df['Avg RTT UL (ms)']) / 2
+
+    # Calculate average throughput
+    df['Avg Throughput (kbps)'] = (df['Avg Bearer TP DL (kbps)'] + df['Avg Bearer TP UL (kbps)']) / 2
+
+    # Aggregate data per customer
+    aggregated_df = df.groupby('MSISDN/Number').agg({
+        'Avg TCP Retrans (Bytes)': 'mean',
+        'Avg RTT (ms)': 'mean',
+        'Handset Type': 'first',  # Take the first handset type for each customer
+        'Avg Throughput (kbps)': 'mean'
+    }).reset_index()
+
+    return aggregated_df
+def process_data(df):
+    df['Total_Avg_RTT'] = df['Avg RTT DL (ms)'] + df['Avg RTT UL (ms)']
+    df['Total_Avg_Bearer_TP'] = df['Avg Bearer TP DL (kbps)'] + df['Avg Bearer TP UL (kbps)']
+    df['Total_Avg_TCP'] = df['TCP DL Retrans. Vol (Bytes)'] + df['TCP UL Retrans. Vol (Bytes)']
+    
+    df['Total_Avg_RTT'].fillna(value=df['Total_Avg_RTT'].mean(), inplace=True)
+    
+    return df
+
+
+def analyze_tcp(df):
+    sorted_by_tcp = df.sort_values('Total_Avg_TCP', ascending=False)
+    top_10 = sorted_by_tcp.head(10)['Total_Avg_TCP']
+    last_10 = sorted_by_tcp.tail(10)['Total_Avg_TCP']
+    most_10 = df['Total_Avg_TCP'].value_counts().head(10)
+    
+    return top_10, last_10, most_10
+
+def analyze_rtt(df):
+    sorted_by_RTT = df.sort_values('Total_Avg_RTT', ascending=False)
+    top_10 = sorted_by_RTT.head(10)['Total_Avg_RTT']
+    last_10 = sorted_by_RTT.tail(10)['Total_Avg_RTT']
+    most_10 = df['Total_Avg_RTT'].value_counts().head(10)
+    
+    return top_10, last_10, most_10
+
+def analyze_tp(df):
+    sorted_by_Bearer_TP = df.sort_values('Total_Avg_Bearer_TP', ascending=False)
+    top_10 = sorted_by_Bearer_TP.head(10)['Total_Avg_Bearer_TP']
+    last_10 = sorted_by_Bearer_TP.tail(10)['Total_Avg_Bearer_TP']
+    most_10 = df['Total_Avg_Bearer_TP'].value_counts().head(10)
+    
+    return top_10, last_10, most_10
+
+def mult_hist(sr, rows, cols, title_text, subplot_titles, interactive=False):
+    fig = make_subplots(rows=rows, cols=cols, subplot_titles=subplot_titles)
+    for i in range(rows):
+        for j in range(cols):
+            x = ["-> " + str(i) for i in sr[i+j].index]
+            fig.add_trace(go.Bar(x=x, y=sr[i+j].values), row=i+1, col=j+1)
+    fig.update_layout(showlegend=False, title_text=title_text)
+    if(interactive):
+        fig.show()
+    else:
+        return Image(pio.to_image(fig, format='png', width=1200))
+    
+
+def aggregate_handset_type(df):
+    handset_type_agg = df.groupby('Handset Type').agg(
+        {'Total_Avg_Bearer_TP': 'mean', 'Total_Avg_TCP': 'mean'})
+    return handset_type_agg
+
