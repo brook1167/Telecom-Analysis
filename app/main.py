@@ -6,7 +6,7 @@ import sys
 
 # Add the path to the directory
 rpath = os.path.abspath('..')
-if rpath not in sys.path:
+if rpath not in sys.path: 
     sys.path.insert(0, rpath)
 
 # Load CSV
@@ -209,10 +209,22 @@ elif selected_analysis == "User Overview Analysis":
     st.plotly_chart(fig_dl_bytes)
 
     st.write("Histogram of 'Social_Media_Total_Data'")
+
     df["Social_Media_Total_Data"] = df["Social Media DL (Bytes)"] + df["Social Media UL (Bytes)"]
+
     # Histogram of 'Social_Media_Total_Data' using Plotly
     fig_social_media = px.histogram(df, x='Social_Media_Total_Data', nbins=30, title="Distribution of Social Media Total Data")
     st.plotly_chart(fig_social_media)
+
+    
+    st.write("Histogram of 'Google_Total_Data'")
+
+    df["Google_Total_Data"] = df["Google DL (Bytes)"] + df["Google UL (Bytes)"]
+    
+    # Histogram of 'Google_Total_Data' using Plotly
+    fig_google_data = px.histogram(df, x='Google_Total_Data', nbins=30, title="Distribution of Google Total Data")
+    st.plotly_chart(fig_google_data)
+
 
 # Placeholder for content based on selected analysis
 elif selected_analysis == "User Engagement Analysis":
