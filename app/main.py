@@ -397,5 +397,85 @@ elif selected_analysis == "User Engagement Analysis":
     st.bar_chart(top_3_apps)
 
 elif selected_analysis == "User Experience Analysis":
-    st.write("You are viewing User Experience Analysis data.")
+    
     # You can add more content specific to User Experience Analysis here
+    st.write("You are viewing User Experience Analysis data.")
+    
+    # Fix missing values
+    fill_missing_values_t3(df)
+    
+    # Function to analyze TCP,RTT,TP data
+    def analyze_tcp(df):
+        df['Total_Avg_TCP'] = df['TCP DL Retrans. Vol (Bytes)'] + df['TCP UL Retrans. Vol (Bytes)']
+        
+        sorted_by_tcp = df.sort_values('Total_Avg_TCP', ascending=False)
+        top_10_tcp = sorted_by_tcp.head(10)['Total_Avg_TCP']
+        last_10_tcp = sorted_by_tcp.tail(10)['Total_Avg_TCP']
+        most_10_tcp = df['Total_Avg_TCP'].value_counts().head(10)
+    
+        return top_10_tcp, last_10_tcp, most_10_tcp
+    def analyze_rtt(df):
+        df['Total_Avg_RTT'] = df['Avg RTT DL (ms)'] + df['Avg RTT UL (ms)']
+        sorted_by_RTT = df.sort_values('Total_Avg_RTT', ascending=False)
+        top_10_rtt = sorted_by_RTT.head(10)['Total_Avg_RTT']
+        last_10_rtt = sorted_by_RTT.tail(10)['Total_Avg_RTT']
+        most_10_rtt = df['Total_Avg_RTT'].value_counts().head(10)
+        return top_10_rtt, last_10_rtt, most_10_rtt
+
+    def analyze_tp(df):
+        df['Total_Avg_Bearer_TP'] = df['Avg Bearer TP DL (kbps)'] + df['Avg Bearer TP UL (kbps)']
+        sorted_by_Bearer_TP = df.sort_values('Total_Avg_Bearer_TP', ascending=False)
+        top_10_tp = sorted_by_Bearer_TP.head(10)['Total_Avg_Bearer_TP']
+        last_10_tp = sorted_by_Bearer_TP.tail(10)['Total_Avg_Bearer_TP']
+        most_10_tp = df['Total_Avg_Bearer_TP'].value_counts().head(10)
+    
+        return top_10_tp, last_10_tp, most_10_tp
+    
+    
+    # Analyze TCP values
+    top_10_tcp, last_10_tcp, most_10_tcp = analyze_tcp(df)
+
+    # Plot TCP values
+    st.write("Top 10 TCP  Values:")
+    st.bar_chart(top_10_tcp)
+
+     # Analyze RTT values
+    top_10_rtt, last_10_rtt, most_10_rtt = analyze_rtt(df)
+    
+    # Plot RTT values
+    st.write("Top 10 RTT Retransmission Values:")
+    st.bar_chart(top_10_rtt)
+
+    # Analyze TP values
+    top_10_tp, last_10_tp, most_10_tp = analyze_tp(df)
+
+    # Plot TP values
+    st.write("Top 10 Throughput Values:")
+    st.bar_chart(top_10_tp)
+
+     # Plot TCP values
+    st.write("Last 10 TCP  Values:")
+    st.bar_chart(last_10_tcp)
+
+    # Plot RTT values
+    st.write("Last 10 RTT Retransmission Values:")
+    st.bar_chart(last_10_rtt)
+
+    # Plot TP values
+    st.write("Last 10 TP  Values:")
+    st.bar_chart(last_10_tp)
+
+
+    # Plot TCP values
+    st.write("Most 10 TCP  Values:")
+    st.bar_chart(most_10_tcp)
+
+    # Plot RTT values
+    st.write("Most 10 RTT Retransmission Values:")
+    st.bar_chart(most_10_rtt)
+
+    # Plot TP values
+    st.write("Most 10 TP  Values:")
+    st.bar_chart(most_10_tp)
+
+   
