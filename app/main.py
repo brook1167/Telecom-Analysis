@@ -23,7 +23,6 @@ def load_data_from_github():
         st.error(f"Failed to fetch data from GitHub. Status code: {response.status_code}")
         return pd.DataFrame()
 
-
 # Load CSV
 df = load_data_from_github()
 
