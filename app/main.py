@@ -3,14 +3,29 @@ import streamlit as st
 import plotly.express as px
 import os
 import sys
+import requests
+from io import StringIO
 
 # Add the path to the directory
 rpath = os.path.abspath('..')
 if rpath not in sys.path: 
     sys.path.insert(0, rpath)
 
+# Function to load data from a raw GitHub URL
+def load_data_from_github():
+    data_url = 'https://raw.githubusercontent.com/brook1167/Telecom-Analysis/task-3/data/telecom.csv'
+    response = requests.get(data_url)
+    if response.status_code == 200:
+        # Convert the response content into a pandas DataFrame
+        data = pd.read_csv(StringIO(response.text))
+        return data
+    else:
+        st.error(f"Failed to fetch data from GitHub. Status code: {response.status_code}")
+        return pd.DataFrame()
+
+
 # Load CSV
-df = pd.read_csv("./data/telecom.csv")
+df = load_data_from_github()
 
 # Function to drop rows with missing values in specific columns
 def drop_nan(df):
