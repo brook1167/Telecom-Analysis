@@ -67,8 +67,7 @@ st.sidebar.title("Navigation")
 analysis_options = ["Explore Dataset", "User Overview Analysis", "User Engagement Analysis", "User Experience Analysis"]
 selected_analysis = st.sidebar.selectbox("Choose an analysis:", analysis_options)
 
-# Display the selected analysis in the main body
-st.header(f"Selected: {selected_analysis}")
+
 
 # Explore Dataset the data
 if selected_analysis == "Explore Dataset":
@@ -340,8 +339,62 @@ elif selected_analysis == "User Overview Analysis":
 
 # Placeholder for content based on selected analysis
 elif selected_analysis == "User Engagement Analysis":
-    st.write("You are viewing User Engagement Analysis data.")
-    # You can add more content specific to User Engagement Analysis here
+    st.write("User Engagement Analysis details")
+
+    df["Total_UL_and_DL"] = df["Total UL (Bytes)"] + df["Total DL (Bytes)"]
+    # Prepare user data
+    users = df[['MSISDN/Number', 'Bearer Id', 'Dur. (ms)', 'Total_UL_and_DL']].copy().rename(columns={'Dur. (ms)': 'time_duration'})
+    users = users.groupby('MSISDN/Number').agg({
+        'Bearer Id': 'count',
+        'time_duration': 'sum',
+        'Total_UL_and_DL': 'sum'
+    }).rename(columns={'Bearer Id': 'sessions'})
+
+    # Display top 10 users
+    top_10_users = users.head(10)
+
+    # Bar chart for total traffic (upload + download) per user
+    st.write("Top 10 Users by Total Upload and Download:")
+    st.bar_chart(top_10_users[['Total_UL_and_DL']])
+
+    # Bar chart for total sessions
+    st.write("Top 10 Users by Total Sessions:")
+    st.bar_chart(top_10_users[['sessions']])
+
+    # Bar chart for time duration per user
+    st.write("Top 10 Users by Time Duration:")
+    st.bar_chart(top_10_users[['time_duration']])
+
+    # Perpare the data frames
+    df["Youtube_Total_Data"] = df["Youtube DL (Bytes)"] + df["Youtube UL (Bytes)"]
+    df["Google_Total_Data"] = df["Google DL (Bytes)"] + df["Google UL (Bytes)"]
+    df["Email_Total_Data"] = df["Email DL (Bytes)"] + df["Email UL (Bytes)"]
+    df["Social_Media_Total_Data"] = df["Social Media DL (Bytes)"] + df["Social Media UL (Bytes)"]
+    df["Netflix_Total_Data"] = df["Netflix DL (Bytes)"] + df["Netflix UL (Bytes)"]
+    df["Gaming_Total_Data"] = df["Gaming DL (Bytes)"] + df["Gaming UL (Bytes)"]
+    df["Other_Total_Data"] = df["Other DL (Bytes)"] + df["Other UL (Bytes)"]    
+
+     # Prepare application usage data
+    apps = df.groupby('MSISDN/Number').agg({
+        'Gaming_Total_Data': 'sum',
+        'Youtube_Total_Data': 'sum',
+        'Netflix_Total_Data': 'sum',
+        'Google_Total_Data': 'sum',
+        'Email_Total_Data': 'sum',
+        'Social_Media_Total_Data': 'sum',
+        'Other_Total_Data': 'sum'
+    })
+
+    # Calculate the total data usage per application
+    apps_total = apps.sum().sort_values(ascending=False)
+    
+    # Get top 3 most used applications
+    top_3_apps = apps_total.head(3)
+    
+
+    # Bar chart for top 3 most used applications
+    st.write("Top 3 Most Used Applications:")
+    st.bar_chart(top_3_apps)
 
 elif selected_analysis == "User Experience Analysis":
     st.write("You are viewing User Experience Analysis data.")
