@@ -125,6 +125,9 @@ if selected_analysis == "Explore Dataset":
 
 # Display User Overview Analysis
 elif selected_analysis == "User Overview Analysis":
+
+    
+
     st.write("Top 10 handsets used by customers:")
     
     # Calculate top 10 handsets and sort them
@@ -315,6 +318,25 @@ elif selected_analysis == "User Overview Analysis":
     # Scatter plot of 'Total UL (Bytes)' vs 'Total DL (Bytes)' using Plotly
     fig_scatter = px.scatter(df, x='Total_UL_and_DL', y='Other_Total_Data', title="Total Data Vs. Other_Total_Data",)
     st.plotly_chart(fig_scatter)
+
+    st.write("Correlation of Usage of User Data Volume")
+    columns = ['Youtube_Total_Data', 'Google_Total_Data', 'Email_Total_Data','Social_Media_Total_Data', 'Netflix_Total_Data', 'Gaming_Total_Data', 'Other_Total_Data', 'Total_UL_and_DL']
+
+    selected_columns_df = df[columns]
+
+    # Generate the correlation matrix for the specified columns
+    corr_matrix = selected_columns_df.corr()
+
+# Generate heatmap using Plotly
+    fig = px.imshow(corr_matrix, 
+                text_auto=True, 
+                color_continuous_scale='Viridis', 
+                labels={'color': 'Correlation'},
+                title='Heatmap of Correlation Between Columns')
+
+    # Display the heatmap in Streamlit
+    st.plotly_chart(fig)
+    
 
 # Placeholder for content based on selected analysis
 elif selected_analysis == "User Engagement Analysis":
