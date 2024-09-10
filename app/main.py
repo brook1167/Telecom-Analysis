@@ -74,7 +74,7 @@ def fill_missing_values_t3(df):
             df[col] = df[col].fillna(value=mode_value)
 
 # Set the title of the Streamlit app
-st.title("Analysis Dashboard")
+st.title("Telecom Analysis Dashboard")
 
 # Add a selectbox in the sidebar for analysis options
 st.sidebar.title("Navigation")
