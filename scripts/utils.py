@@ -10,12 +10,16 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn import preprocessing
 import plotly.express as px
+import pickle
 import plotly.io as pio
 from IPython.display import Image
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import StandardScaler, normalize
-
+from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sqlalchemy import create_engine
 def load_df(filepath):
     return pd.read_csv(filepath)
 
@@ -343,3 +347,64 @@ def aggregate_handset_type(df):
         {'Total_Avg_Bearer_TP': 'mean', 'Total_Avg_TCP': 'mean'})
     return handset_type_agg
 
+def write_dataframe_to_postgres(df, table_name):
+    # Database credentials
+    dbname = "telecom_db"
+    user = "postgres"
+    password = "12345"
+    host = "localhost"
+    port = "5432"
+    
+    # Construct the SQLAlchemy connection string
+    connection_string = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
+    
+    try:
+        # Create a SQLAlchemy engine
+        engine = create_engine(connection_string)
+        
+        # Adjust DataFrame types if needed (adjust this based on your actual needs)
+        df['MSISDN/Number'] = df['MSISDN/Number'].astype('int')  # Use 'int' or 'BIGINT' depending on the size
+        df['satisfaction_cluster'] = df['satisfaction_cluster'].astype('int')
+        df['engagement_score'] = df['engagement_score'].astype('float')
+        df['experience_score'] = df['experience_score'].astype('float')
+        df['satisfaction_score'] = df['satisfaction_score'].astype('float')
+        
+        # Write the DataFrame to the PostgreSQL table
+        df.to_sql(table_name, engine, if_exists='replace', index=False)
+        
+        print(f"DataFrame successfully written to '{table_name}' table.")
+    
+    except Exception as e:
+        # Print the error message
+        print(f"An error occurred: {e}")
+
+def fetch_data_from_postgres(table_name):
+    # Database credentials
+    dbname = "telecom_db"
+    user = "postgres"
+    password = "12345"
+    host = "localhost"
+    port = "5432"
+    
+    # Construct the SQLAlchemy connection string
+    connection_string = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
+    
+    try:
+        # Create a SQLAlchemy engine
+        engine = create_engine(connection_string)
+        
+        # Define the SQL query to read from the table
+        sql_query = f"SELECT * FROM {table_name}"
+        
+        # Use Pandas to execute the SQL query and read the result into a DataFrame
+        df = pd.read_sql(sql_query, engine)
+        
+        # Return the DataFrame
+        return df
+    
+    except Exception as e:
+        # Print the error message and return None
+        print(f"An error occurred: {e}")
+        return None
+
+# Example usage
